@@ -1,2 +1,60 @@
-hello world! <br/>
-sono libo
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Sample illustrating the use of Web NFC.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Web NFC Sample</title>
+  
+  </head>
+  <body>
+    <button id="writeButton">Write</button>
+    <button id="scanButton">Scan</button>
+    <script>
+      if (!("NDEFReader" in window))
+       alert("errore nfc");
+      else{
+        scanButton.addEventListener("click", async () => {
+        alert("User clicked scan button");
+  
+        try {
+         const ndef = new NDEFReader();
+         alert(">  started");
+        await ndef.scan();
+       // ndef.scan();
+        alert("> Scan started");
+  
+        ndef.addEventListener("readingerror", () => {
+            alert("Argh! Cannot read data from the NFC tag. Try another one?");
+         });
+  
+        ndef.addEventListener("reading", ({ message, serialNumber }) => {
+            alert(`> Serial Number: ${serialNumber} , > Records: (${message.records.length})`);
+           
+        });
+        } catch (error) {
+            alert("Argh! " + error);
+        }
+        });
+
+
+        
+writeButton.addEventListener("click", async () => {
+  log("User clicked write button");
+
+  try {
+    const ndef = new NDEFReader();
+    await ndef.write("Hello world!");
+    log("> Message written");
+  } catch (error) {
+    log("Argh! " + error);
+  }
+});
+      }
+       
+      </script>
+   
+
+  </body>
+</html>
